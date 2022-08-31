@@ -461,7 +461,7 @@ main_menu() {
     select opt in "${options[@]}"
     do
         case $opt in
-            "Install OctoPRint")
+            "Install OctoPrint")
                 prepare
                 break
             ;;
