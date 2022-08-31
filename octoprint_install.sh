@@ -333,7 +333,7 @@ write_camera() {
     #mjpg-streamer
     if [ "$STREAMER" == mjpg-streamer ]; then
         cat $SCRIPTDIR/octocam_mjpg.service | \
-        sed -e "s/OCTOUSER/$OCTOUSER/" \
+        sed -e "s/OCTOUSER/$user/" \
         -e "s/OCTOCAM/cam_$INSTANCE/" \
         -e "s/RESOLUTION/$RESOLUTION/" \
         -e "s/FRAMERATE/$FRAMERATE/" \
@@ -343,7 +343,7 @@ write_camera() {
     #ustreamer
     if [ "$STREAMER" == ustreamer ]; then
         cat $SCRIPTDIR/octocam_ustream.service | \
-        sed -e "s/OCTOUSER/$OCTOUSER/" \
+        sed -e "s/OCTOUSER/$user/" \
         -e "s/OCTOCAM/cam_$INSTANCE/" \
         -e "s/RESOLUTION/$RESOLUTION/" \
         -e "s/FRAMERATE/$FRAMERATE/" \
