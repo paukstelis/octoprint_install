@@ -1,7 +1,7 @@
 #!/bin/bash
 
 install_plugin() {
-    echo "Installing $plugin...." | log
+    echo "Installing $plugin...."
     $OCTOPIP install "$plugin_path"
 }
 

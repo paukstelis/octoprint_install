@@ -240,10 +240,14 @@ prepare () {
             #Prompt for admin user and firstrun stuff
             firstrun
             echo 'Starting OctoPrint service on port 5000'
+            #server restart commands
+            $OCTOEXEC config set server.commands.serverRestartCommand 'sudo systemctl restart octoprint'
+            $OCTOEXEC config set server.commands.systemRestartCommand 'sudo reboot'
             systemctl start octoprint.service
             systemctl enable octoprint.service
             echo
             echo
+            
             if prompt_confirm "Would you like to install recommended plugins now?"; then
                 plugin_menu
             fi
@@ -318,6 +322,7 @@ firstrun() {
     fi
     
 }
+
 write_camera() {
     
     get_settings
