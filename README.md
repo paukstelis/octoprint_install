@@ -5,7 +5,7 @@ Need help with this or octoprint_deploy? You can open issues here or ask on Disc
 These files provide a simple script that will install OctoPrint and a video streamer (mjpg-streamer or ustreamer) on virtually any linux based system. The system must use systemd.
 
 # How to use
-* All commands assume you are operating out of your home directory.
+* All commands assume you are operating out of your home directory using a terminal directly on the machine or by ssh.
 * Install Ubuntu 18-22.X, Mint 20.3+, Debian, DietPi, RPiOS, Armbian, Fedora35+, or ArchLinux on your system (make sure your user is admin for sudo).
 * Install git if it isn't already: `sudo apt install git` or `sudo dnf install git` or `sudo pacman -S git`.
 * run the command `git clone https://github.com/paukstelis/octoprint_install.git`.
