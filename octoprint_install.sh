@@ -59,6 +59,7 @@ deb_packages() {
     -e ffmpeg \
     -e uuid-runtime\
     -e ssh\
+    -e libffi-dev\
     -e haproxy\
     | xargs apt-get install -y
     
@@ -111,7 +112,7 @@ prepare () {
             echo "Adding systemctl and reboot to sudo"
             echo "$user ALL=NOPASSWD: /usr/bin/systemctl" > /etc/sudoers.d/octoprint_systemctl
             echo "$user ALL=NOPASSWD: /usr/sbin/reboot" > /etc/sudoers.d/octoprint_reboot
-            echo "This will install necessary packages, download and install OctoPrint and setup a template instance on this machine."
+            echo "This will install necessary packages, download and install OctoPrint on this machine."
             #install packages
             #All DEB based
             if [ $INSTALL -eq 2 ]; then
