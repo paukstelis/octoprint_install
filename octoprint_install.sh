@@ -61,6 +61,7 @@ deb_packages() {
     -e ssh\
     -e libffi-dev\
     -e haproxy\
+    -e ssl-cert\
     | xargs apt-get install -y
     
     #pacakges to REMOVE go here
@@ -121,12 +122,12 @@ prepare () {
             fi
             #Fedora35/CentOS
             if [ $INSTALL -eq 3 ]; then
-                dnf -y install python3-devel cmake libjpeg-turbo-devel libbsd-devel libevent-devel haproxy openssh openssh-server
+                dnf -y install python3-devel cmake libjpeg-turbo-devel libbsd-devel libevent-devel haproxy openssh openssh-server opnessl libffi-devel
             fi
             
             #ArchLinux
             if [ $INSTALL -eq 4 ]; then
-                pacman -S --noconfirm make cmake python python-virtualenv libyaml python-pip libjpeg-turbo python-yaml python-setuptools ffmpeg gcc libevent libbsd openssh haproxy v4l-utils
+                pacman -S --noconfirm make cmake python python-virtualenv libyaml python-pip libjpeg-turbo python-yaml python-setuptools libffi ffmpeg gcc libevent libbsd openssh haproxy v4l-utils
                 usermod -a -G uucp $user
             fi
             
