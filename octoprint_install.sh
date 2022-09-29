@@ -378,15 +378,19 @@ add_camera() {
     echo 'Adding USB camera'
     INSTANCE='octoprint'
     
-    journalctl --rotate > /dev/null 2>&1
-    journalctl --vacuum-time=1seconds > /dev/null 2>&1
+    dmesg -C
     echo "Plug your camera in via USB now (detection time-out in 1 min)"
     counter=0
-    while [[ -z "$CAM" ]] && [[ $counter -lt 30 ]]; do
-        CAM=$(timeout 1s journalctl -kf | sed -n -e 's/^.*SerialNumber: //p')
-        TEMPUSBCAM=$(timeout 1s journalctl -kf | sed -n -e 's|^.*input:.*/\(.*\)/input/input.*|\1|p')
+    while [[ -z "$CAM" ]] && [[ $counter -lt 60 ]]; do
+        CAM=$(dmesg | sed -n -e 's/^.*SerialNumber: //p')
+        TEMPUSBCAM=$(dmesg | sed -n -e 's|^.*input:.*/\(.*\)/input/input.*|\1|p')
         counter=$(( $counter + 1 ))
+        if [[ -n "$TEMPUSBCAM" ]] && [[ -z "$CAM" ]]; then
+            break
+        fi
+        sleep 1
     done
+    dmesg -C
     #Failed state. Nothing detected
     if [ -z "$CAM" ] && [ -z "$TEMPUSBCAM" ]; then
         echo
