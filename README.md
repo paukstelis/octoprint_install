@@ -1,4 +1,4 @@
-Updated August 31, 2022.  
+Updated September 28, 2022.  
 Want to support this work? Buy Me a Coffee. https://www.buymeacoffee.com/ppaukstelis.
 Need help with this or octoprint_deploy? You can open issues here or ask on Discord: https://discord.gg/6vgSjgvR6u
 # octoprint_install
@@ -14,5 +14,8 @@ These files provide a simple script that will install OctoPrint and a video stre
 * You will asked if you want to install haproxy and if you want to establish the admin user and do the first run settings with the command-line.
 * You will be asked if you want to install recommended plugins.
 * You can now connect to your OctoPrint instance (http://ipaddress:5000, http://hostname.local:5000, or if you used haproxy, no need to include port 5000)
-* You can add a USB webcam by choosing the selection in the menu.
+* You can add a USB webcam by choosing the selection in the menu. Your camera service will be setup in /etc/systemd/system/cam_octoprint.service.
 * NOTE: RPi cameras are not supported through this method, but can be installed manually.
+
+# What's New (0.1.2)
+* Using dmesg instead of journalctl for detecting cameras

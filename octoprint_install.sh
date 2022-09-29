@@ -453,7 +453,7 @@ add_camera() {
 }
 
 main_menu() {
-    VERSION=0.1.0
+    VERSION=0.1.2
     CAM=''
     TEMPUSBCAM=''
     echo
