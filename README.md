@@ -17,5 +17,7 @@ These files provide a simple script that will install OctoPrint and a video stre
 * You can add a USB webcam by choosing the selection in the menu. Your camera service will be setup in /etc/systemd/system/cam_octoprint.service.
 * NOTE: RPi cameras are not supported through this method, but can be installed manually.
 
-# What's New (0.1.2)
+# What's New (0.1.3)
 * Using dmesg instead of journalctl for detecting cameras
+* Remove existing streamer installations, if they exist
+* Add system shutdown command and appropriate sudo permissions

@@ -103,7 +103,13 @@ prepare () {
     echo
     if prompt_confirm "Ready to begin?"
     then
-        
+        #remove streamer directories, if they exist
+        if [ -d "/home/$user/mjpg-streamer" ]; then
+            rm -rf /home/$user/mjpg-streamer
+        fi
+        if [ -d "/home/$user/ustreamer" ]; then
+            rm -rf /home/$user/ustreamer
+        fi
         echo 'Adding current user to dialout and video groups.'
         usermod -a -G dialout,video $user
         
@@ -113,6 +119,7 @@ prepare () {
             echo "Adding systemctl and reboot to sudo"
             echo "$user ALL=NOPASSWD: /usr/bin/systemctl" > /etc/sudoers.d/octoprint_systemctl
             echo "$user ALL=NOPASSWD: /usr/sbin/reboot" > /etc/sudoers.d/octoprint_reboot
+            echo "$user ALL=NOPASSWD: /usr/sbin/shutdown" > /etc/sudoers.d/octoprint_shutdown
             echo "This will install necessary packages, download and install OctoPrint on this machine."
             #install packages
             #All DEB based
@@ -245,6 +252,7 @@ prepare () {
             #server restart commands
             $OCTOEXEC config set server.commands.serverRestartCommand 'sudo systemctl restart octoprint'
             $OCTOEXEC config set server.commands.systemRestartCommand 'sudo reboot'
+            $OCTOEXEC config set server.commands.systemShutdownCommand 'sudo shutdown now'
             systemctl start octoprint.service
             systemctl enable octoprint.service
             echo
@@ -453,7 +461,7 @@ add_camera() {
 }
 
 main_menu() {
-    VERSION=0.1.2
+    VERSION=0.1.3
     CAM=''
     TEMPUSBCAM=''
     echo
