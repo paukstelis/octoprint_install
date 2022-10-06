@@ -414,7 +414,6 @@ add_camera() {
         USBCAM=$TEMPUSBCAM
     else
         echo -e "Camera detected with serial number: \033[0;34m $CAM \033[0m"
-        check_sn "$CAM"
     fi
     echo "Camera Port (ENTER will increment last value in /etc/camera_ports):"
     read CAMPORT
