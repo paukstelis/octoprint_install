@@ -1,4 +1,4 @@
-Updated September 28, 2022.  
+Updated November 12, 2022.  
 Want to support this work? Buy Me a Coffee. https://www.buymeacoffee.com/ppaukstelis.
 Need help with this or octoprint_deploy? You can open issues here or ask on Discord: https://discord.gg/6vgSjgvR6u
 # octoprint_install
@@ -18,7 +18,9 @@ These files provide a simple script that will install OctoPrint and a video stre
 * You can add a USB webcam by choosing the selection in the menu. Your camera service will be setup in /etc/systemd/system/cam_octoprint.service, and will be started upon boot
 * NOTE: RPi cameras are not supported through this method, but can be installed manually.
 
-# What's New (0.1.3)
+# What's New (0.1.4)
+* Reload USB rules after adding camera
+* Remove existing ~/.octoprint if it already exists at install
 * Using dmesg instead of journalctl for detecting cameras
 * Remove existing streamer installations, if they exist
 * Add system shutdown command and appropriate sudo permissions

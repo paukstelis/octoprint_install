@@ -110,6 +110,12 @@ prepare () {
         if [ -d "/home/$user/ustreamer" ]; then
             rm -rf /home/$user/ustreamer
         fi
+        if [ -d "/home/$user/.octoprint" ]; then
+            rm -rf /home/$user/.octoprint
+        fi
+        if [ -f "/etc/systemd/system/octoprint.service" ]; then
+            systemctl stop octoprint
+        fi
         echo 'Adding current user to dialout and video groups.'
         usermod -a -G dialout,video $user
         
@@ -377,7 +383,8 @@ write_camera() {
     if [ -n "$USBCAM" ]; then
         echo SUBSYSTEM==\"video4linux\",KERNELS==\"$USBCAM\", SUBSYSTEMS==\"usb\", ATTR{index}==\"0\", DRIVERS==\"uvcvideo\", SYMLINK+=\"cam_$INSTANCE\" >> /etc/udev/rules.d/99-octoprint.rules
     fi
-    
+    udevadm control --reload-rules
+    udevadm trigger
 }
 
 add_camera() {
@@ -453,14 +460,12 @@ add_camera() {
     write_camera
     systemctl start cam_$INSTANCE.service
     systemctl enable cam_$INSTANCE.service
-    udevadm control --reload-rules
-    udevadm trigger
     main_menu
     
 }
 
 main_menu() {
-    VERSION=0.1.3
+    VERSION=0.1.4
     CAM=''
     TEMPUSBCAM=''
     echo
