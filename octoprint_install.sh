@@ -76,7 +76,7 @@ prepare () {
     echo
     echo
     PS3='OS type: '
-    options=("Ubuntu 18-22, Mint, Debian, Raspberry Pi OS" "Fedora/CentOS" "ArchLinux" "Quit")
+    options=("Ubuntu 20-22, Mint, Debian, Raspberry Pi OS" "Fedora/CentOS" "ArchLinux" "Quit")
     select opt in "${options[@]}"
     do
         case $opt in
@@ -205,6 +205,7 @@ prepare () {
                         break
                     ;;
                     "None")
+                        VID=3
                         break
                     ;;
                     *) echo "invalid option $REPLY";;
