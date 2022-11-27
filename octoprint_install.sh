@@ -80,7 +80,7 @@ prepare () {
     select opt in "${options[@]}"
     do
         case $opt in
-            "Ubuntu 18-22, Mint, Debian, Raspberry Pi OS")
+            "Ubuntu 20-22, Mint, Debian, Raspberry Pi OS")
                 INSTALL=2
                 break
             ;;
