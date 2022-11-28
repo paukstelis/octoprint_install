@@ -2,11 +2,15 @@
 
 #all operations must be with root/sudo
 if (( $EUID != 0 )); then
-    echo "Please run as root (sudo)"
+    echo "Please run with sudo"
     exit
 fi
 
 if [ $SUDO_USER ]; then user=$SUDO_USER; fi
+if [ "$user" == root ]; then
+    echo "You should not run this script as root. Use sudo as a normal user"
+    exit
+fi
 SCRIPTDIR=$(dirname $(readlink -f $0))
 source $SCRIPTDIR/plugins.sh
 
