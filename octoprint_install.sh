@@ -133,10 +133,12 @@ prepare () {
             echo "This will install necessary packages, download and install OctoPrint on this machine."
             #install packages
             #All DEB based
+            PYVERSION='python3'
             if [ $INSTALL -eq 2 ]; then
                 apt-get update > /dev/null
                 deb_packages
             fi
+            
             #Fedora35/CentOS
             if [ $INSTALL -eq 3 ]; then
                 dnf -y install gcc python3-devel cmake libjpeg-turbo-devel libbsd-devel libevent-devel haproxy openssh openssh-server opnessl libffi-devel
@@ -144,7 +146,7 @@ prepare () {
                 PYV=$(python3 -c"import sys; print(sys.version_info.minor)")
                 if [ $PYV -eq 11 ]; then
                     dnf -y install python3.10-devel
-                    alias python3='/usr/bin/python3.10'
+                    PYVERSON='python3.10'
                 fi
             fi
             
@@ -158,7 +160,7 @@ prepare () {
             systemctl enable ssh.service
             echo "Installing OctoPrint virtual environment in /home/$user/OctoPrint"
             #make venv
-            sudo -u $user python3 -m venv /home/$user/OctoPrint
+            sudo -u $user $PYVERISON -m venv /home/$user/OctoPrint
             #update pip
             sudo -u $user /home/$user/OctoPrint/bin/pip install --upgrade pip
             #pre-install wheel
