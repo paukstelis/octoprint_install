@@ -139,7 +139,13 @@ prepare () {
             fi
             #Fedora35/CentOS
             if [ $INSTALL -eq 3 ]; then
-                dnf -y install python3-devel cmake libjpeg-turbo-devel libbsd-devel libevent-devel haproxy openssh openssh-server opnessl libffi-devel
+                dnf -y install gcc python3-devel cmake libjpeg-turbo-devel libbsd-devel libevent-devel haproxy openssh openssh-server opnessl libffi-devel
+                systemctl enable sshd.service
+                PYV=$(python3 -c"import sys; print(sys.version_info.minor)")
+                if [ $PYV -eq 11 ]; then
+                    dnf -y install python3.10-devel
+                    alias python3='/usr/bin/python3.10'
+                fi
             fi
             
             #ArchLinux
