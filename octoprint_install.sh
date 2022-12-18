@@ -146,7 +146,7 @@ prepare () {
                 PYV=$(python3 -c"import sys; print(sys.version_info.minor)")
                 if [ $PYV -eq 11 ]; then
                     dnf -y install python3.10-devel
-                    PYVERSON='python3.10'
+                    PYVERSION='python3.10'
                 fi
             fi
             
@@ -160,7 +160,7 @@ prepare () {
             systemctl enable ssh.service
             echo "Installing OctoPrint virtual environment in /home/$user/OctoPrint"
             #make venv
-            sudo -u $user $PYVERISON -m venv /home/$user/OctoPrint
+            sudo -u $user $PYVERSION -m venv /home/$user/OctoPrint
             #update pip
             sudo -u $user /home/$user/OctoPrint/bin/pip install --upgrade pip
             #pre-install wheel
