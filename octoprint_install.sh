@@ -105,21 +105,10 @@ prepare () {
     
     echo
     echo
-    if prompt_confirm "Ready to begin?"
-    then
+    if prompt_confirm "Ready to begin?"; then
         #remove streamer directories, if they exist
-        if [ -d "/home/$user/mjpg-streamer" ]; then
-            rm -rf /home/$user/mjpg-streamer
-        fi
-        if [ -d "/home/$user/ustreamer" ]; then
-            rm -rf /home/$user/ustreamer
-        fi
-        if [ -d "/home/$user/.octoprint" ]; then
-            rm -rf /home/$user/.octoprint
-        fi
-        if [ -f "/etc/systemd/system/octoprint.service" ]; then
-            systemctl stop octoprint
-        fi
+        remove_everything
+        
         echo 'Adding current user to dialout and video groups.'
         usermod -a -G dialout,video $user
         
@@ -477,6 +466,28 @@ add_camera() {
     
 }
 
+remove_everything() {
+    
+    if [ -d "/home/$user/mjpg-streamer" ]; then
+        rm -rf /home/$user/mjpg-streamer
+    fi
+    if [ -d "/home/$user/ustreamer" ]; then
+        rm -rf /home/$user/ustreamer
+    fi
+    if [ -d "/home/$user/.octoprint" ]; then
+        rm -rf /home/$user/.octoprint
+    fi
+    if [ -f "/etc/systemd/system/octoprint.service" ]; then
+        systemctl stop octoprint
+    fi
+    if [ -d "/home/$user/OctoPrint" ]; then
+        rm -rf /home/$user/OctoPrint
+    fi
+    if [ -f "/etc/udev/rules.d/99-octoprint.rules" ]; then
+        rm -f /etc/udev/rules.d/99-octoprint.rules
+    fi
+}
+
 main_menu() {
     VERSION=0.1.4
     CAM=''
@@ -512,5 +523,10 @@ main_menu() {
         esac
     done
 }
+
+#command line arguments
+if [ "$1" == remove ]; then
+    remove_everything
+fi
 
 main_menu
