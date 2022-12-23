@@ -108,7 +108,7 @@ prepare () {
     if prompt_confirm "Ready to begin?"; then
         #remove streamer directories, if they exist
         remove_everything
-
+        
         echo 'Adding current user to dialout and video groups.'
         usermod -a -G dialout,video $user
         
@@ -470,7 +470,7 @@ remove_everything() {
     
     if [ -f "/etc/octoprint_deploy" ]; then
         rm -f /etc/octoprint_deploy
-    fi 
+    fi
     if [ -d "/home/$user/mjpg-streamer" ]; then
         rm -rf /home/$user/mjpg-streamer
     fi
@@ -529,7 +529,9 @@ main_menu() {
 
 #command line arguments
 if [ "$1" == remove ]; then
-    remove_everything
+    if prompt_confirm "Remove everything?"; then
+        remove_everything
+    fi
 fi
 
 main_menu
