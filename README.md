@@ -1,4 +1,4 @@
-Updated November 12, 2022.  
+Updated December 23, 2022.  
 Want to support this work? Buy Me a Coffee. https://www.buymeacoffee.com/ppaukstelis.
 Need help with this or octoprint_deploy? You can open issues here or ask on Discord: https://discord.gg/6vgSjgvR6u
 # octoprint_install
@@ -19,7 +19,7 @@ These files provide a simple script that will install OctoPrint and a video stre
 * NOTE: RPi cameras are not supported through this method, but can be installed manually.
 
 # Other
-* Remove everything and start over: `sudo octoprint_install/octoprint_install remove`
+* Remove everything and start over: `sudo octoprint_install/octoprint_install.sh remove`
 
 # What's New (0.1.5)
 * Add `remove` command like argument to fully uninstall everything.
