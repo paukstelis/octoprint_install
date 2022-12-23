@@ -18,7 +18,12 @@ These files provide a simple script that will install OctoPrint and a video stre
 * You can add a USB webcam by choosing the selection in the menu. Your camera service will be setup in /etc/systemd/system/cam_octoprint.service, and will be started upon boot
 * NOTE: RPi cameras are not supported through this method, but can be installed manually.
 
-# What's New (0.1.4)
+# Other
+* Remove everything and start over: `sudo octoprint_install/octoprint_install remove`
+
+# What's New (0.1.5)
+* Add `remove` command like argument to fully uninstall everything.
+* Fix for Fedora packages
 * Reload USB rules after adding camera
 * Remove existing ~/.octoprint if it already exists at install
 * Using dmesg instead of journalctl for detecting cameras
