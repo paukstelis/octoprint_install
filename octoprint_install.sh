@@ -108,7 +108,7 @@ prepare () {
     if prompt_confirm "Ready to begin?"; then
         #remove streamer directories, if they exist
         remove_everything
-        
+
         echo 'Adding current user to dialout and video groups.'
         usermod -a -G dialout,video $user
         
@@ -468,6 +468,9 @@ add_camera() {
 
 remove_everything() {
     
+    if [ -f "/etc/octoprint_deploy" ]; then
+        rm -f /etc/octoprint_deploy
+    fi 
     if [ -d "/home/$user/mjpg-streamer" ]; then
         rm -rf /home/$user/mjpg-streamer
     fi
