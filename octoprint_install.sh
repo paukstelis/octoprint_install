@@ -42,6 +42,7 @@ get_settings() {
         HAPROXY=$(cat /etc/octoprint_deploy | sed -n -e 's/^haproxy: \(\.*\)/\1/p')
     fi
     OCTOEXEC="sudo -u $user /home/$user/OctoPrint/bin/octoprint"
+    OCOTCONFG="/home/$user/"
 }
 
 #https://askubuntu.com/questions/39497
@@ -139,7 +140,7 @@ prepare () {
             
             #Fedora35/CentOS
             if [ $INSTALL -eq 3 ]; then
-                dnf -y install gcc python3-devel cmake libjpeg-turbo-devel libbsd-devel libevent-devel haproxy openssh openssh-server opnessl libffi-devel
+                dnf -y install gcc python3-devel cmake libjpeg-turbo-devel libbsd-devel libevent-devel haproxy openssh openssh-server openssl libffi-devel
                 systemctl enable sshd.service
                 PYV=$(python3 -c"import sys; print(sys.version_info.minor)")
                 if [ $PYV -eq 11 ]; then
