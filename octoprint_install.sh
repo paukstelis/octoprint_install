@@ -11,7 +11,7 @@ if [ $SUDO_USER ]; then
     user=$SUDO_USER
 else
     echo "You should not run this script as root. Use sudo as a normal user"
-    exit   
+    exit
 fi
 
 if [ "$user" == root ]; then
@@ -39,6 +39,7 @@ get_settings() {
     if [ -f /etc/octoprint_deploy ]; then
         TYPE=$(cat /etc/octoprint_deploy | sed -n -e 's/^type: \(\.*\)/\1/p')
         STREAMER=$(cat /etc/octoprint_deploy | sed -n -e 's/^streamer: \(\.*\)/\1/p')
+        HAPROXY=$(cat /etc/octoprint_deploy | sed -n -e 's/^haproxy: \(\.*\)/\1/p')
     fi
     OCTOEXEC="sudo -u $user /home/$user/OctoPrint/bin/octoprint"
 }
@@ -183,6 +184,7 @@ prepare () {
             if prompt_confirm "Use haproxy?"; then
                 systemctl stop haproxy
                 #get haproxy version
+                echo 'haproxy: true' >> /etc/octoprint_deploy
                 HAversion=$(haproxy -v | sed -n 's/^.*version \([0-9]\).*/\1/p')
                 mv /etc/haproxy/haproxy.cfg /etc/haproxy/haproxy.orig
                 if [ $HAversion -gt 1 ]; then
@@ -378,10 +380,16 @@ write_camera() {
     
     mv $SCRIPTDIR/cam_$INSTANCE.service /etc/systemd/system/
     echo $CAMPORT >> /etc/camera_ports
+    
     #config.yaml modifications
-    echo "webcam:" >> /home/$user/.octoprint/config.yaml
-    echo "    snapshot: http://$(hostname).local:$CAMPORT?action=snapshot" >> /home/$user/.octoprint/config.yaml
-    echo "    stream: http://$(hostname).local:$CAMPORT?action=stream" >> /home/$user/.octoprint/config.yaml
+    echo "webcam:" >> $OCTOCONFIG/.$INSTANCE/config.yaml
+    echo "    snapshot: http://$(hostname).local:$CAMPORT?action=snapshot" >> $OCTOCONFIG/.$INSTANCE/config.yaml
+    if [ -z "$CAMHAPROXY" ]; then
+        echo "    stream: http://$(hostname).local:$CAMPORT?action=stream" >> $OCTOCONFIG/.$INSTANCE/config.yaml
+    else
+        echo "    stream: /cam_$INSTANCE/?action=stream" >> $OCTOCONFIG/.$INSTANCE/config.yaml
+    fi
+
     $OCTOEXEC --basedir /home/$user/.octoprint config append_value --json system.actions "{\"action\": \"Reset video streamer\", \"command\": \"sudo systemctl restart cam_$INSTANCE\", \"name\": \"Restart webcam\"}"
     #Either Serial number or USB port
     #Serial Number
@@ -393,15 +401,39 @@ write_camera() {
     if [ -n "$USBCAM" ]; then
         echo SUBSYSTEM==\"video4linux\",KERNELS==\"$USBCAM\", SUBSYSTEMS==\"usb\", ATTR{index}==\"0\", DRIVERS==\"uvcvideo\", SYMLINK+=\"cam_$INSTANCE\" >> /etc/udev/rules.d/99-octoprint.rules
     fi
+
+    if [ -n $CAMHAPROXY ]; then
+        HAversion=$(haproxy -v | sed -n 's/^.*version \([0-9]\).*/\1/p')
+        #find frontend line, do insert
+        sed -i "/option forwardfor except 127.0.0.1/a\        use_backend cam_$INSTANCE if { path_beg /cam_$INSTANCE/ }" /etc/haproxy/haproxy.cfg
+        echo "#cam_$INSTANCE start" >> /etc/haproxy/haproxy.cfg
+        echo "backend cam_$INSTANCE" >> /etc/haproxy/haproxy.cfg
+        if [ $HAversion -gt 1 ]; then
+            echo "       http-request replace-path /cam_$INSTANCE/(.*)   /\1" >> /etc/haproxy/haproxy.cfg
+            echo "       server webcam1 127.0.0.1:$CAMPORT" >> /etc/haproxy/haproxy.cfg
+        else
+            echo "       reqrep ^([^\ :]*)\ /cam_$INSTANCE/(.*) \1\ /\2" >> /etc/haproxy/haproxy.cfg
+            echo "       server webcam1 127.0.0.1:$CAMPORT" >> /etc/haproxy/haproxy.cfg
+        fi
+        echo "#cam_$INSTANCE stop" >> /etc/haproxy/haproxy.cfg
+        systemctl restart haproxy
+    fi
+    
     udevadm control --reload-rules
     udevadm trigger
 }
 
 add_camera() {
-    
+    get_settings
     if [ $SUDO_USER ]; then user=$SUDO_USER; fi
     echo 'Adding USB camera'
     INSTANCE='octoprint'
+    
+    if [ "$HAPROXY" == true ]; then
+        if prompt_confirm "Add cameras to haproxy?"; then
+            CAMHAPROXY=1
+        fi
+    fi
     
     dmesg -C
     echo "Plug your camera in via USB now (detection time-out in 1 min)"
