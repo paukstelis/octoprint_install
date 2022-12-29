@@ -252,7 +252,7 @@ prepare () {
                 semanage fcontext -a -t bin_t "/home/$user/OctoPrint/bin/.*"
                 chcon -Rv -u system_u -t bin_t "/home/$user/OctoPrint/bin/"
                 restorecon -R -v /home/$user/OctoPrint/bin
-                
+
                 if [ $VID -eq 1 ]; then
                     semanage fcontext -a -t bin_t "/home/$user/mjpg-streamer/.*"
                     chcon -Rv -u more sysystem_u -t bin_t "/home/$user/mjpg-streamer/"
@@ -423,6 +423,10 @@ write_camera() {
     
     udevadm control --reload-rules
     udevadm trigger
+
+    if prompt_confirm "OctoPrint must restart for camera changes to take affect. Restart now?"; then
+        systemctl restart octoprint
+    fi
 }
 
 add_camera() {
