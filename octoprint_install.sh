@@ -510,11 +510,6 @@ add_camera() {
 
 remove_everything() {
     
-    systemctl stop octoprint
-    systemctl disable octoprint
-    systemctl stop cam_octoprint
-    systemctl disable cam_octoprint
-
     if [ -f "/etc/octoprint_deploy" ]; then
         rm -f /etc/octoprint_deploy
     fi
@@ -529,6 +524,13 @@ remove_everything() {
     fi
     if [ -f "/etc/systemd/system/octoprint.service" ]; then
         systemctl stop octoprint
+        systemctl disable octoprint
+        rm -f /etc/systemd/system/octoprint.service
+    fi
+    if [ -f "/etc/systemd/system/cam_octoprint.service" ]; then
+        systemctl stop cam_octoprint
+        systemctl disable cam_octoprint
+        rm -f /etc/systemd/system/cam_octoprint.service
     fi
     if [ -d "/home/$user/OctoPrint" ]; then
         rm -rf /home/$user/OctoPrint
