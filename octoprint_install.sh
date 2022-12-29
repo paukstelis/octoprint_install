@@ -501,6 +501,7 @@ add_camera() {
     echo "Selected camera framerate: $FRAMERATE"
     
     write_camera
+    systemctl daemon-reload
     systemctl start cam_$INSTANCE.service
     systemctl enable cam_$INSTANCE.service
     main_menu
@@ -509,6 +510,11 @@ add_camera() {
 
 remove_everything() {
     
+    systemctl stop octoprint
+    systemctl disable octoprint
+    systemctl stop cam_octoprint
+    systemctl disable cam_octoprint
+
     if [ -f "/etc/octoprint_deploy" ]; then
         rm -f /etc/octoprint_deploy
     fi
