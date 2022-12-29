@@ -530,6 +530,9 @@ remove_everything() {
     if [ -f "/etc/udev/rules.d/99-octoprint.rules" ]; then
         rm -f /etc/udev/rules.d/99-octoprint.rules
     fi
+    if [ -f "/etc/camera_ports" ]; then
+        rm -f /etc/camera_ports
+    fi
 }
 
 main_menu() {
