@@ -247,11 +247,12 @@ prepare () {
                 echo "Good for you! Cameras are just annoying anyway."
             fi
             
-            #Fedora has SELinux on by default so must make adjustments? Don't really know what these do...
+            #Fedora has SELinux on by default (and is very annoying) so must make adjustments
             if [ $INSTALL -eq 3 ]; then
                 semanage fcontext -a -t bin_t "/home/$user/OctoPrint/bin/.*"
                 chcon -Rv -u system_u -t bin_t "/home/$user/OctoPrint/bin/"
                 restorecon -R -v /home/$user/OctoPrint/bin
+                
                 if [ $VID -eq 1 ]; then
                     semanage fcontext -a -t bin_t "/home/$user/mjpg-streamer/.*"
                     chcon -Rv -u more sysystem_u -t bin_t "/home/$user/mjpg-streamer/"
@@ -509,7 +510,7 @@ add_camera() {
 }
 
 remove_everything() {
-    
+    get_settings
     if [ -f "/etc/octoprint_deploy" ]; then
         rm -f /etc/octoprint_deploy
     fi
