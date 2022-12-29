@@ -1,4 +1,4 @@
-Updated December 23, 2022.  
+Updated December 29, 2022.  
 Want to support this work? Buy Me a Coffee. https://www.buymeacoffee.com/ppaukstelis.
 Need help with octoprint_install or octoprint_deploy? You can open issues here or ask on Discord: https://discord.gg/6vgSjgvR6u
 # octoprint_install
@@ -22,7 +22,8 @@ These files provide a simple script that will install OctoPrint and a video stre
 # Other
 * Remove everything and start over: `sudo octoprint_install/octoprint_install.sh remove`
 
-# What's New (0.1.5)
+# What's New (0.1.6)
+* Add the option for putting the webcamera behind haproxy
 * Add `remove` command line argument to fully uninstall everything.
 * Fix for Fedora packages
 * Reload USB rules after adding camera

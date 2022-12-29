@@ -549,7 +549,7 @@ remove_everything() {
 }
 
 main_menu() {
-    VERSION=0.1.5
+    VERSION=0.1.6
     CAM=''
     TEMPUSBCAM=''
     echo
