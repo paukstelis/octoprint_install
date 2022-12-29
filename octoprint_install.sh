@@ -42,7 +42,7 @@ get_settings() {
         HAPROXY=$(cat /etc/octoprint_deploy | sed -n -e 's/^haproxy: \(\.*\)/\1/p')
     fi
     OCTOEXEC="sudo -u $user /home/$user/OctoPrint/bin/octoprint"
-    OCOTCONFG="/home/$user/"
+    OCTOCONFIG="/home/$user"
 }
 
 #https://askubuntu.com/questions/39497
