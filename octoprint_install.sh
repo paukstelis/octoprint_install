@@ -438,6 +438,7 @@ add_camera() {
     if [ "$HAPROXY" == true ]; then
         if prompt_confirm "Add cameras to haproxy?"; then
             CAMHAPROXY=1
+        fi
     fi
     
     dmesg -C
