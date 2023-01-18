@@ -404,7 +404,7 @@ write_camera() {
         echo SUBSYSTEM==\"video4linux\",KERNELS==\"$USBCAM\", SUBSYSTEMS==\"usb\", ATTR{index}==\"0\", DRIVERS==\"uvcvideo\", SYMLINK+=\"cam_$INSTANCE\" >> /etc/udev/rules.d/99-octoprint.rules
     fi
 
-    if [ -n $CAMHAPROXY ]; then
+    if [ -n "$CAMHAPROXY" ]; then
         HAversion=$(haproxy -v | sed -n 's/^.*version \([0-9]\).*/\1/p')
         #find frontend line, do insert
         sed -i "/option forwardfor except 127.0.0.1/a\        use_backend cam_$INSTANCE if { path_beg /cam_$INSTANCE/ }" /etc/haproxy/haproxy.cfg
@@ -438,7 +438,6 @@ add_camera() {
     if [ "$HAPROXY" == true ]; then
         if prompt_confirm "Add cameras to haproxy?"; then
             CAMHAPROXY=1
-        fi
     fi
     
     dmesg -C
