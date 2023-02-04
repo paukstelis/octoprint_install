@@ -204,7 +204,7 @@ prepare () {
             echo
             echo
             PS3='Which video streamer you would like to install?: '
-            options=("mjpeg-streamer" "ustreamer" "None")
+            options=("mjpeg-streamer" "ustreamer (Recommended)" "None")
             select opt in "${options[@]}"
             do
                 case $opt in
@@ -212,7 +212,7 @@ prepare () {
                         VID=1
                         break
                     ;;
-                    "ustreamer")
+                    "ustreamer (Recommended)")
                         VID=2
                         break
                     ;;
@@ -385,7 +385,7 @@ write_camera() {
     
     #config.yaml modifications
     echo "webcam:" >> $OCTOCONFIG/.$INSTANCE/config.yaml
-    echo "    snapshot: http://$(hostname).local:$CAMPORT?action=snapshot" >> $OCTOCONFIG/.$INSTANCE/config.yaml
+    echo "    snapshot: http://localhost:$CAMPORT?action=snapshot" >> $OCTOCONFIG/.$INSTANCE/config.yaml
     if [ -z "$CAMHAPROXY" ]; then
         echo "    stream: http://$(hostname).local:$CAMPORT?action=stream" >> $OCTOCONFIG/.$INSTANCE/config.yaml
     else
@@ -549,7 +549,7 @@ remove_everything() {
 }
 
 main_menu() {
-    VERSION=0.1.6
+    VERSION=0.1.7
     CAM=''
     TEMPUSBCAM=''
     echo
