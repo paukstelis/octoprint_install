@@ -2,11 +2,11 @@
 #https://community.octoprint.org/t/setting-up-octoprint-on-a-computer-running-fedora-centos-almalinux-or-rockylinux/37137/2
 
 global
-        maxconn 4000
+        maxconn 1024
         user haproxy
         group haproxy
         daemon
-        log 127.0.0.1 local0 debug
+        log 127.0.0.1 local0 warning
 
 defaults
         log     global

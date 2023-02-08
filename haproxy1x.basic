@@ -1,9 +1,9 @@
 global
-        maxconn 4096
+        maxconn 1024
         user haproxy
         group haproxy
         daemon
-        log 127.0.0.1 local0 debug
+        log 127.0.0.1 local0 warning
 
 defaults
         log     global
