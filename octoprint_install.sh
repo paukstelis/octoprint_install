@@ -506,7 +506,8 @@ add_camera() {
     systemctl daemon-reload
     systemctl start cam_$INSTANCE.service
     systemctl enable cam_$INSTANCE.service
-    main_menu
+    echo "Camera installed. Exiting"
+    exit 0
 
 }
 
