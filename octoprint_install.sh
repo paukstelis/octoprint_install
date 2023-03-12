@@ -62,6 +62,7 @@ deb_packages() {
             -e python3-venv \
             -e python3.9-venv \
             -e python3.10-venv \
+            -e python3-setuptools
             -e virtualenv \
             -e python3-dev \
             -e build-essential \
@@ -237,6 +238,9 @@ prepare() {
             if [ $VID -eq 2 ]; then
                 echo 'streamer: ustreamer' >>/etc/octoprint_deploy
                 #install ustreamer
+                #Some OS's seem to use older gcc by default which breaks compilation with a -std=c17 error
+                #Can be corrected by providing appropriate CC flag, but need to know available versions
+                GCCVERSION=$(gcc --version | sed )
                 sudo -u $user git clone --depth=1 https://github.com/pikvm/ustreamer
                 sudo -u $user make -C ustreamer >/dev/null
             fi
