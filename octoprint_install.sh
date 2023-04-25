@@ -242,6 +242,7 @@ prepare() {
                 #Can be corrected by providing appropriate CC flag, but need to know available versions
                 sudo -u $user git clone --depth=1 https://github.com/pikvm/ustreamer
                 sudo -u $user make -C ustreamer >/dev/null
+                
             fi
 
             if [ $VID -eq 3 ]; then
@@ -374,6 +375,15 @@ write_camera() {
 
     #ustreamer
     if [ "$STREAMER" == ustreamer ]; then
+
+        #ustreamer build check
+        if [ -f "/home/$user/ustreamer/ustreamer" ]; then
+            echo "ustreamer check complete"
+        else
+            echo "WARNING! ustreamer not built! Attempting to rebuild"
+            sudo -u $user make -C ustreamer
+        fi    
+
         cat $SCRIPTDIR/octocam_ustream.service |
             sed -e "s/OCTOUSER/$user/" \
                 -e "s/OCTOCAM/cam_$INSTANCE/" \
