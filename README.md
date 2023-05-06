@@ -1,4 +1,4 @@
-Updated February 3, 2023.  
+Updated May 5th, 2023.  
 Want to support this work? Buy Me a Coffee. https://www.buymeacoffee.com/ppaukstelis. Don't like to give money to inviduals over the internet, but want to show support? Consider donating to the Sanjay Mortimer Foundation: https://www.sanjaymortimerfoundation.org/
 Need help with octoprint_install or octoprint_deploy? You can open issues here or ask on Discord: https://discord.gg/6vgSjgvR6u
 # octoprint_install
@@ -22,6 +22,8 @@ These files provide a simple script that will install OctoPrint and a video stre
 # Other
 * Remove everything and start over: `sudo octoprint_install/octoprint_install.sh remove`
 
-# What's New (0.1.7)
+# What's New (0.2.0)
+* Multi-camera support
+* Pi camera, command line option
 * ustreamer as recommended streamer
 * camera snapshot path default to localhost
