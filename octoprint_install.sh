@@ -356,6 +356,22 @@ firstrun() {
     
 }
 
+detect_camera() {
+    dmesg -C
+    echo "Plug your camera in via USB now (detection time-out in 1 min)"
+    counter=0
+    while [[ -z "$CAM" ]] && [[ $counter -lt 60 ]]; do
+        CAM=$(dmesg | sed -n -e 's/^.*SerialNumber: //p')
+        TEMPUSBCAM=$(dmesg | sed -n -e 's|^.*input:.*/\(.*\)/input/input.*|\1|p')
+        counter=$(( $counter + 1 ))
+        if [[ -n "$TEMPUSBCAM" ]] && [[ -z "$CAM" ]]; then
+            break
+        fi
+        sleep 1
+    done
+    dmesg -C
+}
+
 write_camera() {
     
     get_settings
@@ -443,21 +459,23 @@ add_camera() {
     INSTANCE=octoprint
     OCTOCONFIG="/home/$user/"
     OCTOUSER=$user
-    if grep -q "cam_$INSTANCE" /etc/udev/rules.d/99-octoprint.rules; then
-        echo "It appears this instance already has at least one camera."
-        if prompt_confirm "Do you want to add an additional camera for this instance?"; then
-            echo "Enter a number for this camera."
-            echo "Ex. entering 2 will setup a service called cam2_$INSTANCE"
-            echo
-            read INUM
-            if [ -z "$INUM" ]; then
-                echo "No value given, setting as 2"
-                INUM='2'
+    if [ -f "/etc/udev/rules.d/99-octoprint.rules"]; then
+        if grep -q "cam_$INSTANCE" /etc/udev/rules.d/99-octoprint.rules; then
+            echo "It appears this instance already has at least one camera."
+            if prompt_confirm "Do you want to add an additional camera for this instance?"; then
+                echo "Enter a number for this camera."
+                echo "Ex. entering 2 will setup a service called cam2_$INSTANCE"
+                echo
+                read INUM
+                if [ -z "$INUM" ]; then
+                    echo "No value given, setting as 2"
+                    INUM='2'
+                fi
+            else
+                main_menu
             fi
-        else
-            main_menu
         fi
-    fi    
+    fi
     
     #for now just set a flag that we are going to write cameras behind haproxy
     if [ "$HAPROXY" == true ]; then
