@@ -427,7 +427,8 @@ write_camera() {
     if [ -n "$CAMHAPROXY" ]; then
         HAversion=$(haproxy -v | sed -n 's/^.*version \([0-9]\).*/\1/p')
         #find frontend line, do insert
-        sed -i "/use_backend $INSTANCE if/a\        use_backend cam${INUM}_$INSTANCE if { path_beg /cam${INUM}_$INSTANCE/ }" /etc/haproxy/haproxy.cfg
+        sed -i "/option forwardfor except 127.0.0.1/a\        use_backend cam${INUM}_$INSTANCE if { path_beg /cam${INUM}_$INSTANCE/ }" /etc/haproxy/haproxy.cfg
+        #sed -i "/use_backend $INSTANCE if/a\        use_backend cam${INUM}_$INSTANCE if { path_beg /cam${INUM}_$INSTANCE/ }" /etc/haproxy/haproxy.cfg
         if [ $HAversion -gt 1 ]; then
             EXTRACAM="backend cam${INUM}_$INSTANCE\n\
             http-request replace-path /cam${INUM}_$INSTANCE/(.*)   /|\1\n\
