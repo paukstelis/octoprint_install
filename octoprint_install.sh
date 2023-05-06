@@ -457,7 +457,7 @@ add_camera() {
         else
             main_menu
         fi
-        
+    fi    
     
     #for now just set a flag that we are going to write cameras behind haproxy
     if [ "$HAPROXY" == true ]; then
