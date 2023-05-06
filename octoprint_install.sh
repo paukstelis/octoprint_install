@@ -498,12 +498,12 @@ add_camera() {
         fi
         
         if [ -z "$CAM" ]; then
-            echo "Camera Serial Number not detected" 
-            echo -e "Camera will be setup with physical USB address of \033[0;32m $TEMPUSBCAM.\033[0m" 
-            echo "The camera will have to stay plugged into this location." 
+            echo "Camera Serial Number not detected"
+            echo -e "Camera will be setup with physical USB address of \033[0;32m $TEMPUSBCAM.\033[0m"
+            echo "The camera will have to stay plugged into this location."
             USBCAM=$TEMPUSBCAM
         else
-            echo -e "Camera detected with serial number: \033[0;32m $CAM \033[0m" 
+            echo -e "Camera detected with serial number: \033[0;32m $CAM \033[0m"
         fi
         
     else
@@ -553,28 +553,26 @@ add_camera() {
         fi
         echo "Invalid resolution"
     done
-    echo "Selected camera resolution: $RESOLUTION" 
+    echo "Selected camera resolution: $RESOLUTION"
     echo "Camera Framerate (use 0 for ustreamer hardware) [default: 5]:"
     read FRAMERATE
     if [ -z "$FRAMERATE" ]; then
         FRAMERATE=5
     fi
-    echo "Selected camera framerate: $FRAMERATE" 
+    echo "Selected camera framerate: $FRAMERATE"
     
-    #Need to check if this is a one-off install
-    if [ -n "$camopt" ]; then
-        write_camera
-        #Pi Cam setup, replace cam_INSTANCE with /dev/video0
-        if [ -n "$PI" ]; then
-            echo SUBSYSTEM==\"video4linux\", ATTRS{name}==\"camera0\", SYMLINK+=\"cam${INUM}_$INSTANCE\" >> /etc/udev/rules.d/99-octoprint.rules
-        fi
-        systemctl start cam${INUM}_$INSTANCE.service
-        systemctl enable cam${INUM}_$INSTANCE.service
-        systemctl daemon-reload
-        udevadm control --reload-rules
-        udevadm trigger
-        main_menu
+    write_camera
+    #Pi Cam setup, replace cam_INSTANCE with /dev/video0
+    if [ -n "$PI" ]; then
+        echo SUBSYSTEM==\"video4linux\", ATTRS{name}==\"camera0\", SYMLINK+=\"cam${INUM}_$INSTANCE\" >> /etc/udev/rules.d/99-octoprint.rules
     fi
+    systemctl start cam${INUM}_$INSTANCE.service
+    systemctl enable cam${INUM}_$INSTANCE.service
+    systemctl daemon-reload
+    udevadm control --reload-rules
+    udevadm trigger
+    main_menu
+    
 }
 
 
