@@ -17,7 +17,8 @@ These files provide a simple script that will install OctoPrint and a video stre
 * You can now connect to your OctoPrint instance (http://ipaddress:5000, http://hostname.local:5000, or if you used haproxy, no need to include port 5000)
 * OctoPrint will always be started at boot.
 * You can add a USB webcam by choosing the selection in the menu. Your camera service will be setup in /etc/systemd/system/cam_octoprint.service, and will be started upon boot
-* NOTE: RPi cameras are not supported through this method, but can be installed manually.
+* There is now support of multiple cameras! Run through the camera install script a second time and it will prompt you to include a number designation for the next camera.
+* To use a Raspberry Pi camera, run the script with the picam commandline option (`sudo octoprint_install/octoprint_install.sh picam`)
 
 # Other
 * Remove everything and start over: `sudo octoprint_install/octoprint_install.sh remove`
