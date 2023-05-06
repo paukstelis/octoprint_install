@@ -498,13 +498,12 @@ add_camera() {
         fi
         
         if [ -z "$CAM" ]; then
-            echo "Camera Serial Number not detected" | log
-            echo -e "Camera will be setup with physical USB address of \033[0;32m $TEMPUSBCAM.\033[0m" | log
-            echo "The camera will have to stay plugged into this location." | log
+            echo "Camera Serial Number not detected" 
+            echo -e "Camera will be setup with physical USB address of \033[0;32m $TEMPUSBCAM.\033[0m" 
+            echo "The camera will have to stay plugged into this location." 
             USBCAM=$TEMPUSBCAM
         else
-            echo -e "Camera detected with serial number: \033[0;32m $CAM \033[0m" | log
-            check_sn "$CAM"
+            echo -e "Camera detected with serial number: \033[0;32m $CAM \033[0m" 
         fi
         
     else
@@ -554,13 +553,13 @@ add_camera() {
         fi
         echo "Invalid resolution"
     done
-    echo "Selected camera resolution: $RESOLUTION" | log
+    echo "Selected camera resolution: $RESOLUTION" 
     echo "Camera Framerate (use 0 for ustreamer hardware) [default: 5]:"
     read FRAMERATE
     if [ -z "$FRAMERATE" ]; then
         FRAMERATE=5
     fi
-    echo "Selected camera framerate: $FRAMERATE" | log
+    echo "Selected camera framerate: $FRAMERATE" 
     
     #Need to check if this is a one-off install
     if [ -n "$camopt" ]; then
