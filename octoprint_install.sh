@@ -459,7 +459,7 @@ add_camera() {
     INSTANCE=octoprint
     OCTOCONFIG="/home/$user/"
     OCTOUSER=$user
-    if [ -f "/etc/udev/rules.d/99-octoprint.rules"]; then
+    if [ -f "/etc/udev/rules.d/99-octoprint.rules" ]; then
         if grep -q "cam_$INSTANCE" /etc/udev/rules.d/99-octoprint.rules; then
             echo "It appears this instance already has at least one camera."
             if prompt_confirm "Do you want to add an additional camera for this instance?"; then
