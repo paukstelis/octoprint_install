@@ -1,6 +1,6 @@
 Updated May 5th, 2023.  
 Want to support this work? Buy Me a Coffee. https://www.buymeacoffee.com/ppaukstelis. Don't like to give money to inviduals over the internet, but want to show support? Consider donating to the Sanjay Mortimer Foundation: https://www.sanjaymortimerfoundation.org/
-Need help with octoprint_install or octoprint_deploy? You can open issues here or ask on Discord: https://discord.gg/6vgSjgvR6u
+Need help with octoprint_install or octoprint_deploy? You can open issues here or ask on Discord: https://discord.gg/6vgSjgvR6u. If you are looking to run _multiple_ printers on a single device, you will want to begin with octoprint_deploy: https://github.com/paukstelis/octoprint_deploy
 # octoprint_install
 These files provide a simple script that will install OctoPrint and a video streamer (mjpg-streamer or ustreamer) on virtually any linux based system. The system must use systemd.
 
