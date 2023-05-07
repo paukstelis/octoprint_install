@@ -597,9 +597,9 @@ remove_everything() {
         rm -f /etc/systemd/system/octoprint.service
     fi
     if [ -f "/etc/systemd/system/cam_octoprint.service" ]; then
-        systemctl stop cam_octoprint
-        systemctl disable cam_octoprint
-        rm -f /etc/systemd/system/cam_octoprint.service
+        systemctl stop cam*_octoprint
+        systemctl disable cam*_octoprint
+        rm -f /etc/systemd/system/cam*_octoprint.service
     fi
     if [ -d "/home/$user/OctoPrint" ]; then
         rm -rf /home/$user/OctoPrint
