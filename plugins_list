@@ -4,4 +4,11 @@ plugin:Firmware Updater path:https://github.com/OctoPrint/OctoPrint-FirmwareUpda
 plugin:Terminal Commands Extended: path:https://github.com/jneilliii/OctoPrint-TerminalCommandsExtended/archive/master.zip
 plugin:Active Filters Extended path:https://github.com/jneilliii/OctoPrint-ActiveFiltersExtended/archive/master.zip
 plugin:PrintTimeGenius path:https://github.com/eyal0/OctoPrint-PrintTimeGenius/archive/master.zip
-plugin:UI Customizer path:https://github.com/LazeMSS/OctoPrint-UICustomizer/archive/main.zip  
+plugin:UI Customizer path:https://github.com/LazeMSS/OctoPrint-UICustomizer/archive/main.zip
+plugin:Arc-Welder path:https://github.com/FormerLurker/ArcWelderPlugin/archive/master.zip
+plugin:Dashboard path:https://github.com/j7126/OctoPrint-Dashboard/archive/master.zip
+plugin:Ecxclude Region path:https://github.com/bradcfisher/OctoPrint-ExcludeRegionPlugin/archive/master.zip
+plugin:Filament Manager path:https://github.com/OllisGit/OctoPrint-FilamentManager/archive/master.zip
+plugin:M73 Progress Plugin path:https://github.com/cesarvandevelde/OctoPrint-M73Progress/archive/master.zip
+plugin:Print Time Genius path:https://github.com/eyal0/OctoPrint-PrintTimeGenius/archive/master.zip
+plugin:Slicer Thumbnails path:https://github.com/jneilliii/OctoPrint-PrusaSlicerThumbnails/archive/master.zip
