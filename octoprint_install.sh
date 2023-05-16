@@ -276,6 +276,7 @@ prepare() {
             $OCTOEXEC config set server.commands.serverRestartCommand 'sudo systemctl restart octoprint'
             $OCTOEXEC config set server.commands.systemRestartCommand 'sudo reboot'
             $OCTOEXEC config set server.commands.systemShutdownCommand 'sudo shutdown now'
+            $OCTOEXEC config set webcam.ffmpeg /usr/bin/ffmpeg
             systemctl start octoprint.service
             systemctl enable octoprint.service
             echo
