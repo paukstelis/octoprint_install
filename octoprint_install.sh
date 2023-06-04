@@ -204,51 +204,8 @@ prepare() {
             echo
             echo
             echo
-            PS3='Which video streamer you would like to install?: '
-            options=("mjpeg-streamer" "ustreamer (Recommended)" "None")
-            select opt in "${options[@]}"; do
-                case $opt in
-                    "mjpeg-streamer")
-                        VID=1
-                        break
-                    ;;
-                    "ustreamer (Recommended)")
-                        VID=2
-                        break
-                    ;;
-                    "None")
-                        VID=3
-                        break
-                    ;;
-                    *) echo "invalid option $REPLY" ;;
-                esac
-            done
-            
-            if [ $VID -eq 1 ]; then
-                echo 'streamer: mjpg-streamer' >>/etc/octoprint_deploy
-                #install mjpg-streamer, not doing any error checking or anything
-                echo 'Installing mjpeg-streamer'
-                sudo -u $user git clone --depth=1 https://github.com/jacksonliam/mjpg-streamer.git mjpeg
-                #apt -y install
-                sudo -u $user make -C mjpeg/mjpg-streamer-experimental >/dev/null
-                sudo -u $user mv mjpeg/mjpg-streamer-experimental /home/$user/mjpg-streamer
-                sudo -u $user rm -rf mjpeg
-            fi
-            
-            if [ $VID -eq 2 ]; then
-                echo 'streamer: ustreamer' >>/etc/octoprint_deploy
-                #install ustreamer
-                #Some OS's seem to use older gcc by default which breaks compilation with a -std=c17 error
-                #Can be corrected by providing appropriate CC flag, but need to know available versions
-                sudo -u $user git clone --depth=1 https://github.com/pikvm/ustreamer
-                sudo -u $user make -C ustreamer >/dev/null
-                
-            fi
-            
-            if [ $VID -eq 3 ]; then
-                echo 'streamer: none' >>/etc/octoprint_deploy
-                echo "Good for you! Cameras are just annoying anyway."
-            fi
+ 
+            streamer_install
             
             #Fedora has SELinux on by default (and is very annoying) so must make adjustments
             if [ $INSTALL -eq 3 ]; then
@@ -295,6 +252,67 @@ prepare() {
         
     fi
     main_menu
+}
+
+streamer_install() {
+    PS3='Which video streamer you would like to install?: '
+    options=("mjpeg-streamer" "ustreamer (recommended)" "None")
+    select opt in "${options[@]}"
+    do
+        case $opt in
+            "mjpeg-streamer")
+                VID=1
+                break
+            ;;
+            "ustreamer (recommended)")
+                VID=2
+                break
+            ;;
+            "None")
+                VID=3
+                break
+            ;;
+            *) echo "invalid option $REPLY";;
+        esac
+    done
+    
+    if [ $VID -eq 1 ]; then
+        
+        #install mjpg-streamer, not doing any error checking or anything
+        echo 'Installing mjpeg-streamer'
+        sudo -u $user git clone https://github.com/jacksonliam/mjpg-streamer.git mjpeg
+        #apt -y install
+        sudo -u $user make -C mjpeg/mjpg-streamer-experimental > /dev/null
+        sudo -u $user mv mjpeg/mjpg-streamer-experimental /home/$user/mjpg-streamer
+        sudo -u $user rm -rf mjpeg
+
+        if [ -f "/home/$user/mjpg-streamer/mjpg_streamer" ]; then
+            echo "mjpg_streamer installed successfully"
+            echo 'streamer: mjpg-streamer' >> /etc/octoprint_deploy
+        else
+            echo "There was a problem installing the streamer. Please try again."
+            streamer_install
+        fi
+    fi
+    
+    if [ $VID -eq 2 ]; then
+        
+        #install ustreamer
+        sudo -u $user git clone --depth=1 https://github.com/pikvm/ustreamer
+        sudo -u $user make -C ustreamer > /dev/null
+
+        if [ -f "/home/$user/ustreamer/ustreamer" ]; then
+            echo "ustreamer installed successfully"
+            echo 'streamer: ustreamer' >> /etc/octoprint_deploy
+        else
+            echo "There was a problem installing the streamer. Please try again."
+            streamer_install
+        fi
+    fi
+    
+    if [ $VID -eq 3 ]; then
+        echo "Good for you! Cameras are just annoying anyway."
+    fi
 }
 
 firstrun() {
