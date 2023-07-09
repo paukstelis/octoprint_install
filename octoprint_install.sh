@@ -49,8 +49,8 @@ get_settings() {
         STREAMER=$(cat $OCTODEPLOY | sed -n -e 's/^streamer: \(\.*\)/\1/p')
         HAPROXY=$(cat $OCTODEPLOY | sed -n -e 's/^haproxy: \(\.*\)/\1/p')
     fi
-    OCTOEXEC="sudo -u $user /home/$user/OctoPrint/bin/octoprint"
     OCTOCONFIG="/home/$user"
+    OCTOEXEC="sudo -u $user $OCTOCONFIG/OctoPrint/bin/octoprint"
 }
 
 #https://askubuntu.com/questions/39497
@@ -128,8 +128,7 @@ prepare() {
         usermod -a -G dialout,video $user
         
         if [ $INSTALL -gt 1 ]; then
-            OCTOEXEC="sudo -u $user /home/$user/OctoPrint/bin/octoprint"
-            OCTOPIP="sudo -u $user /home/$user/OctoPrint/bin/pip"
+            OCTOPIP="sudo -u $user $OCTOCONFIG/OctoPrint/bin/pip"
             echo "Adding systemctl and reboot to sudo"
             echo "$user ALL=NOPASSWD: /usr/bin/systemctl" >/etc/sudoers.d/octoprint_systemctl
             echo "$user ALL=NOPASSWD: /usr/sbin/reboot" >/etc/sudoers.d/octoprint_reboot
@@ -162,21 +161,21 @@ prepare() {
             
             echo "Enabling ssh server..."
             systemctl enable ssh.service
-            echo "Installing OctoPrint virtual environment in /home/$user/OctoPrint"
+            echo "Installing OctoPrint virtual environment in $OCTOCONFIG/OctoPrint"
             #make venv
-            sudo -u $user $PYVERSION -m venv /home/$user/OctoPrint
+            sudo -u $user $PYVERSION -m venv $OCTOCONFIG/OctoPrint
             #update pip
-            sudo -u $user /home/$user/OctoPrint/bin/pip install --upgrade pip
+            sudo -u $user $OCTOCONFIG/OctoPrint/bin/pip install --upgrade pip
             #pre-install wheel
-            sudo -u $user /home/$user/OctoPrint/bin/pip install wheel
+            sudo -u $user $OCTOCONFIG/OctoPrint/bin/pip install wheel
             #install oprint
-            sudo -u $user /home/$user/OctoPrint/bin/pip install OctoPrint
+            sudo -u $user $OCTOCONFIG/OctoPrint/bin/pip install OctoPrint
             #start server and run in background
             echo 'Creating OctoPrint service...'
             cat $SCRIPTDIR/octoprint_generic.service |
             sed -e "s/OCTOUSER/$user/" \
-            -e "s#OCTOPATH#/home/$user/OctoPrint/bin/octoprint#" \
-            -e "s#OCTOCONFIG#/home/$user/#" \
+            -e "s#OCTOPATH#$OCTOCONFIG/OctoPrint/bin/octoprint#" \
+            -e "s#OCTOCONFIG#$OCTOCONFIG/#" \
             -e "s/NEWINSTANCE/octoprint/" \
             -e "s/NEWPORT/5000/" >/etc/systemd/system/octoprint.service
             
@@ -213,19 +212,19 @@ prepare() {
             
             #Fedora has SELinux on by default (and is very annoying) so must make adjustments
             if [ $INSTALL -eq 3 ]; then
-                semanage fcontext -a -t bin_t "/home/$user/OctoPrint/bin/.*"
-                chcon -Rv -u system_u -t bin_t "/home/$user/OctoPrint/bin/"
-                restorecon -R -v /home/$user/OctoPrint/bin
+                semanage fcontext -a -t bin_t "$OCTOCONFIG/OctoPrint/bin/.*"
+                chcon -Rv -u system_u -t bin_t "$OCTOCONFIG/OctoPrint/bin/"
+                restorecon -R -v $OCTOCONFIG/OctoPrint/bin
                 
                 if [ $VID -eq 1 ]; then
-                    semanage fcontext -a -t bin_t "/home/$user/mjpg-streamer/.*"
-                    chcon -Rv -u more sysystem_u -t bin_t "/home/$user/mjpg-streamer/"
-                    restorecon -R -v /home/$user/mjpg-streamer
+                    semanage fcontext -a -t bin_t "$OCTOCONFIG/mjpg-streamer/.*"
+                    chcon -Rv -u more sysystem_u -t bin_t "$OCTOCONFIG/mjpg-streamer/"
+                    restorecon -R -v $OCTOCONFIG/mjpg-streamer
                 fi
                 if [ $VID -eq 2 ]; then
-                    semanage fcontext -a -t bin_t "/home/$user/ustreamer/.*"
-                    chcon -Rv -u system_u -t bin_t "/home/$user/ustreamer/"
-                    restorecon -R -v /home/$user/ustreamer
+                    semanage fcontext -a -t bin_t "$OCTOCONFIG/ustreamer/.*"
+                    chcon -Rv -u system_u -t bin_t "$OCTOCONFIG/ustreamer/"
+                    restorecon -R -v $OCTOCONFIG/ustreamer
                 fi
                 
             fi
@@ -294,10 +293,10 @@ streamer_install() {
         sudo -u $user git clone https://github.com/jacksonliam/mjpg-streamer.git mjpeg
         #apt -y install
         sudo -u $user make -C mjpeg/mjpg-streamer-experimental > /dev/null
-        sudo -u $user mv mjpeg/mjpg-streamer-experimental /home/$user/mjpg-streamer
+        sudo -u $user mv mjpeg/mjpg-streamer-experimental $OCTOCONFIG/mjpg-streamer
         sudo -u $user rm -rf mjpeg
 
-        if [ -f "/home/$user/mjpg-streamer/mjpg_streamer" ]; then
+        if [ -f "$OCTOCONFIG/mjpg-streamer/mjpg_streamer" ]; then
             echo "mjpg_streamer installed successfully"
             echo 'streamer: mjpg-streamer' >> $OCTODEPLOY
         else
@@ -312,7 +311,7 @@ streamer_install() {
         sudo -u $user git clone --depth=1 https://github.com/pikvm/ustreamer
         sudo -u $user make --directory=ustreamer > /dev/null
 
-        if [ -f "/home/$user/ustreamer/ustreamer" ]; then
+        if [ -f "$OCTOCONFIG/ustreamer/ustreamer" ]; then
             echo "ustreamer installed successfully"
             echo 'streamer: ustreamer' >> $OCTODEPLOY
         else
@@ -487,12 +486,13 @@ write_camera() {
 }
 
 add_camera() {
+    get_settings
+
     PI=$1
     INUM=''
     get_settings
     if [ $SUDO_USER ]; then user=$SUDO_USER; fi
     INSTANCE=octoprint
-    OCTOCONFIG="/home/$user/"
     OCTOUSER=$user
     if [ -f "/etc/udev/rules.d/99-octoprint.rules" ]; then
         if grep -q "cam_$INSTANCE" /etc/udev/rules.d/99-octoprint.rules; then
@@ -616,14 +616,14 @@ remove_everything() {
     if [ -f $OCTODEPLOY ]; then
         rm -f $OCTODEPLOY
     fi
-    if [ -d "/home/$user/mjpg-streamer" ]; then
-        rm -rf /home/$user/mjpg-streamer
+    if [ -d "$OCTOCONFIG/mjpg-streamer" ]; then
+        rm -rf $OCTOCONFIG/mjpg-streamer
     fi
-    if [ -d "/home/$user/ustreamer" ]; then
-        rm -rf /home/$user/ustreamer
+    if [ -d "$OCTOCONFIG/ustreamer" ]; then
+        rm -rf $OCTOCONFIG/ustreamer
     fi
-    if [ -d "/home/$user/.octoprint" ]; then
-        rm -rf /home/$user/.octoprint
+    if [ -d "$OCTOCONFIG/.octoprint" ]; then
+        rm -rf $OCTOCONFIG/.octoprint
     fi
     if [ -f "/etc/systemd/system/octoprint.service" ]; then
         systemctl stop octoprint
@@ -635,8 +635,8 @@ remove_everything() {
         systemctl disable cam*_octoprint
         rm -f /etc/systemd/system/cam*_octoprint.service
     fi
-    if [ -d "/home/$user/OctoPrint" ]; then
-        rm -rf /home/$user/OctoPrint
+    if [ -d "$OCTOCONFIG/OctoPrint" ]; then
+        rm -rf $OCTOCONFIG/OctoPrint
     fi
     if [ -f "/etc/udev/rules.d/99-octoprint.rules" ]; then
         rm -f /etc/udev/rules.d/99-octoprint.rules
