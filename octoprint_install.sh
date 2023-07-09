@@ -165,11 +165,11 @@ prepare() {
             #make venv
             sudo -u $user $PYVERSION -m venv $OCTOCONFIG/OctoPrint
             #update pip
-            sudo -u $user $OCTOCONFIG/OctoPrint/bin/pip install --upgrade pip
+            $OCTOPIP install --upgrade pip
             #pre-install wheel
-            sudo -u $user $OCTOCONFIG/OctoPrint/bin/pip install wheel
+            $OCTOPIP install wheel
             #install oprint
-            sudo -u $user $OCTOCONFIG/OctoPrint/bin/pip install OctoPrint
+            $OCTOPIP install OctoPrint
             #start server and run in background
             echo 'Creating OctoPrint service...'
             cat $SCRIPTDIR/octoprint_generic.service |
