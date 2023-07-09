@@ -257,26 +257,31 @@ prepare() {
 streamer_install() {
     PS3='Which video streamer you would like to install?: '
     options=("mjpeg-streamer" "ustreamer (recommended)" "None")
+
+    MJPEGSTREAMER_SELECTED=1
+    USTREAMER_SELECTED=2
+    OPT_OUT_SELECTED=3
+
     select opt in "${options[@]}"
     do
         case $opt in
             "mjpeg-streamer")
-                VID=1
+                VID=$MJPEGSTREAMER_SELECTED
                 break
             ;;
             "ustreamer (recommended)")
-                VID=2
+                VID=$USTREAMER_SELECTED
                 break
             ;;
             "None")
-                VID=3
+                VID=$OPT_OUT_SELECTED
                 break
             ;;
             *) echo "invalid option $REPLY";;
         esac
     done
     
-    if [ $VID -eq 1 ]; then
+    if [ $VID -eq $MJPEGSTREAMER_SELECTED ]; then
         
         #install mjpg-streamer, not doing any error checking or anything
         echo 'Installing mjpeg-streamer'
@@ -295,11 +300,11 @@ streamer_install() {
         fi
     fi
     
-    if [ $VID -eq 2 ]; then
+    if [ $VID -eq $USTREAMER_SELECTED ]; then
         
         #install ustreamer
         sudo -u $user git clone --depth=1 https://github.com/pikvm/ustreamer
-        sudo -u $user make -C ustreamer > /dev/null
+        sudo -u $user make --directory=ustreamer > /dev/null
 
         if [ -f "/home/$user/ustreamer/ustreamer" ]; then
             echo "ustreamer installed successfully"
@@ -310,7 +315,7 @@ streamer_install() {
         fi
     fi
     
-    if [ $VID -eq 3 ]; then
+    if [ $VID -eq $OPT_OUT_SELECTED ]; then
         echo "Good for you! Cameras are just annoying anyway."
     fi
 }
