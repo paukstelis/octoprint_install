@@ -261,7 +261,12 @@ streamer_install() {
     get_settings
 
     PS3='Which video streamer you would like to install?: '
-    options=("mjpeg-streamer" "ustreamer (recommended)" "None")
+
+    MJPEGSTREAMER_OPTION="mjpeg-streamer"
+    USTREAMER_OPTION="ustreamer (recommended)"
+    OPT_OUT_OPTION="None"
+
+    options=("$MJPEGSTREAMER_OPTION" "$USTREAMER_OPTION" "$OPT_OUT_OPTION")
 
     MJPEGSTREAMER_SELECTED=1
     USTREAMER_SELECTED=2
@@ -270,15 +275,15 @@ streamer_install() {
     select opt in "${options[@]}"
     do
         case $opt in
-            "mjpeg-streamer")
+            $MJPEGSTREAMER_OPTION)
                 VID=$MJPEGSTREAMER_SELECTED
                 break
             ;;
-            "ustreamer (recommended)")
+            $USTREAMER_OPTION)
                 VID=$USTREAMER_SELECTED
                 break
             ;;
-            "None")
+            $OPT_OUT_OPTION)
                 VID=$OPT_OUT_SELECTED
                 break
             ;;
