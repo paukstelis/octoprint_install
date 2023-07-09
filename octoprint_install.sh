@@ -40,12 +40,14 @@ prompt_confirm() {
     done
 }
 
+
 get_settings() {
     #Get octoprint_deploy settings, all of which are written on system prepare
-    if [ -f /etc/octoprint_deploy ]; then
-        TYPE=$(cat /etc/octoprint_deploy | sed -n -e 's/^type: \(\.*\)/\1/p')
-        STREAMER=$(cat /etc/octoprint_deploy | sed -n -e 's/^streamer: \(\.*\)/\1/p')
-        HAPROXY=$(cat /etc/octoprint_deploy | sed -n -e 's/^haproxy: \(\.*\)/\1/p')
+    OCTODEPLOY="/etc/octoprint_deploy"
+    if [ -f $OCTODEPLOY ]; then
+        TYPE=$(cat $OCTODEPLOY | sed -n -e 's/^type: \(\.*\)/\1/p')
+        STREAMER=$(cat $OCTODEPLOY | sed -n -e 's/^streamer: \(\.*\)/\1/p')
+        HAPROXY=$(cat $OCTODEPLOY | sed -n -e 's/^haproxy: \(\.*\)/\1/p')
     fi
     OCTOEXEC="sudo -u $user /home/$user/OctoPrint/bin/octoprint"
     OCTOCONFIG="/home/$user"
@@ -89,6 +91,8 @@ deb_packages() {
 }
 
 prepare() {
+    get_settings
+
     echo
     echo
     PS3='OS type: '
@@ -186,7 +190,7 @@ prepare() {
             if prompt_confirm "Use haproxy?"; then
                 systemctl stop haproxy
                 #get haproxy version
-                echo 'haproxy: true' >>/etc/octoprint_deploy
+                echo 'haproxy: true' >>$OCTODEPLOY
                 HAversion=$(haproxy -v | sed -n 's/^.*version \([0-9]\).*/\1/p')
                 mv /etc/haproxy/haproxy.cfg /etc/haproxy/haproxy.orig
                 if [ $HAversion -gt 1 ]; then
@@ -255,6 +259,8 @@ prepare() {
 }
 
 streamer_install() {
+    get_settings
+
     PS3='Which video streamer you would like to install?: '
     options=("mjpeg-streamer" "ustreamer (recommended)" "None")
 
@@ -293,7 +299,7 @@ streamer_install() {
 
         if [ -f "/home/$user/mjpg-streamer/mjpg_streamer" ]; then
             echo "mjpg_streamer installed successfully"
-            echo 'streamer: mjpg-streamer' >> /etc/octoprint_deploy
+            echo 'streamer: mjpg-streamer' >> $OCTODEPLOY
         else
             echo "There was a problem installing the streamer. Please try again."
             streamer_install
@@ -308,7 +314,7 @@ streamer_install() {
 
         if [ -f "/home/$user/ustreamer/ustreamer" ]; then
             echo "ustreamer installed successfully"
-            echo 'streamer: ustreamer' >> /etc/octoprint_deploy
+            echo 'streamer: ustreamer' >> $OCTODEPLOY
         else
             echo "There was a problem installing the streamer. Please try again."
             streamer_install
@@ -607,8 +613,8 @@ add_camera() {
 
 remove_everything() {
     get_settings
-    if [ -f "/etc/octoprint_deploy" ]; then
-        rm -f /etc/octoprint_deploy
+    if [ -f $OCTODEPLOY ]; then
+        rm -f $OCTODEPLOY
     fi
     if [ -d "/home/$user/mjpg-streamer" ]; then
         rm -rf /home/$user/mjpg-streamer
@@ -641,6 +647,8 @@ remove_everything() {
 }
 
 main_menu() {
+    get_settings
+
     VERSION=0.2.0
     CAM=''
     TEMPUSBCAM=''
@@ -651,7 +659,7 @@ main_menu() {
     echo "*************************"
     echo
     PS3='Select operation: '
-    if [ -f "/etc/octoprint_deploy" ]; then
+    if [ -f $OCTODEPLOY ]; then
         options=("Add USB Camera" "Quit")
     else
         options=("Install OctoPrint" "Quit")
