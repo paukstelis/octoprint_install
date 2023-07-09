@@ -313,10 +313,13 @@ streamer_install() {
     if [ $VID -eq $USTREAMER_SELECTED ]; then
         
         #install ustreamer
-        sudo -u $user git clone --depth=1 https://github.com/pikvm/ustreamer
-        sudo -u $user make --directory=ustreamer > /dev/null
+        USTREAMER_INSTALLATION="$OCTOCONFIG/ustreamer"
 
-        if [ -f "$OCTOCONFIG/ustreamer/ustreamer" ]; then
+        sudo -u $user git clone --depth=1 https://github.com/pikvm/ustreamer $USTREAMER_INSTALLATION
+        echo "Compiling ustreamer ..."
+        sudo -u $user make --directory=$USTREAMER_INSTALLATION > /dev/null
+
+        if [ -f "$USTREAMER_INSTALLATION/ustreamer" ]; then
             echo "ustreamer installed successfully"
             echo 'streamer: ustreamer' >> $OCTODEPLOY
         else
