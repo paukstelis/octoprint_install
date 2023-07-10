@@ -43,5 +43,12 @@ echo "octoprint_install has reached end-of-life and has been replaced by octopri
 if prompt_confirm "Do you want to use octoprint_deploy instead?"; then
     sudo -u $user git clone https://github.com/paukstelis/octoprint_deploy /home/$user/octoprint_deploy
     echo "Cloning octoprint_deploy into /home/$user/octoprint_deploy"
-    echo "To use octoprint_deploy, run the command sudo octoprint_deploy/octoprint_deploy.sh and follow the instructions"
+    echo
+    echo
+    echo
+    echo
+    echo
+    echo "To use octoprint_deploy, run the command:"
+    echo "sudo octoprint_deploy/octoprint_deploy.sh"
+    echo "and follow the instructions"
 fi
