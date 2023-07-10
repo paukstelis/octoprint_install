@@ -51,4 +51,3 @@ if prompt_confirm "Do you want to use octoprint_deploy instead?"; then
     echo "To use octoprint_deploy, run the command:"
     echo "sudo octoprint_deploy/octoprint_deploy.sh"
     echo "and follow the instructions"
-fi
